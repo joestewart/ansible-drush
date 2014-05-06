@@ -1,0 +1,35 @@
+---
+
+# https://github.com/Pheromone/ansbile-php-composer/blob/master/tasks/main.yml
+- name: Install Composer globally
+  shell:  curl -sS https://getcomposer.org/installer | /usr/bin/php && /bin/mv -f composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+
+- name: ensure latest drush7 code available.
+  git: repo="https://github.com/drush-ops/drush.git" update=yes dest=/usr/local/lib/drush7 version=master
+
+- name: ensure latest drush7 command in path.
+  file: src="/usr/local/lib/drush7/drush" dest="/usr/local/bin/drush7" state=link
+
+- name: ensure Composer installs drush7 depedencies and autoload classes.
+  command: composer install chdir=/usr/local/lib/drush7 --no-interaction --no-ansi creates=/usr/local/lib/drush7/vendor/autoload.php
+
+- name: ensure drush 6 code available.
+  git: repo="https://github.com/drush-ops/drush.git" update=yes dest=/usr/local/lib/drush6 version=6.x
+
+- name: ensure drush6 command in path.
+  file: src="/usr/local/lib/drush6/drush" dest="/usr/local/bin/drush6" state=link
+
+- name: ensure Console Table available to Drush6.
+  command: drush6 creates=/usr/local/lib/drush6/lib/Console_Table-1.1.3
+
+- name: ensure latest drush code available.
+  git: repo="https://github.com/drush-ops/drush.git" update=yes dest=/usr/local/lib/drush5 version=5.x
+
+- name: ensure drush5 command in path.
+  file: src="/usr/local/lib/drush5/drush" dest="/usr/local/bin/drush5" state=link
+
+- name: ensure Console Table available to Drush5.
+  command: drush5 creates=/usr/local/lib/drush5/lib/Console_Table-1.1.3
+
+- name: ensure drush command in path.
+  file: src="/usr/local/lib/drush6/drush" dest="/usr/local/bin/drush" state=link
